@@ -1,0 +1,10 @@
+﻿{
+	"name": "CaptainUtilitySwap",
+	"version_number": "1.0.0",
+	"website_url": "https://github.com/CrazyAmphibian/captainutilityswap",
+	"description": "allows captain to use both the orbital probe and diablo strike in game via a hotkey to swap.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.2108",
+		"RiskofThunder-HookGenPatcher-1.2.3"
+	]
+}
