@@ -4,7 +4,7 @@ using RoR2;
 using UnityEngine;
 //using UnityEngine.AddressableAssets;
 
-namespace StageProgression
+namespace CaptainSwap
 {
 
 	[BepInPlugin(PluginGUID, PluginName, PluginVersion)]
