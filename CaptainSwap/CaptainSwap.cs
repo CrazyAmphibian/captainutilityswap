@@ -66,17 +66,16 @@ namespace CaptainSwap
 		}
 		
 		internal void skilliconhotkeyshow(On.RoR2.UI.SkillIcon.orig_Update orig, RoR2.UI.SkillIcon self)
-        {	
+        {
+			orig(self);
 			if (self.targetSkill && self.targetSkillSlot == SkillSlot.Utility && self.targetSkill.characterBody.baseNameToken == "CAPTAIN_BODY_NAME")
             {
-				orig.Invoke(self);
 				self.stockText.gameObject.SetActive(true);
 				self.stockText.fontSize = 12f;		
 				self.stockText.SetText( "["+((UnityEngine.KeyCode)captainutilityswapkeycode).ToString() +"]\n"+ self.targetSkill.stock.ToString(), true);
 			}
             else
 			{ 
-				orig.Invoke(self);
 			}
 		}
 
@@ -156,16 +155,18 @@ namespace CaptainSwap
 
 		public void refreshallcaptainutilities(On.RoR2.Run.orig_BeginStage orig, RoR2.Run self)
         {
-			orig.Invoke(self);
-			CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
-			if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
-            {
-				Log.Debug("Refilling for end of scene...");
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset(); //run twice so we refresh each.
-				swapcaptainutilityskills(charbod);
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset();
-				swapcaptainutilityskills(charbod);
+			orig(self);
+			if (playerbody){
+				CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
+				if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
+				{
+					Log.Debug("Refilling for end of scene...");
+					charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset(); //run twice so we refresh each.
+					swapcaptainutilityskills(charbod);
+					charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset();
+					swapcaptainutilityskills(charbod);
 
+				}
 			}
 
 		}
