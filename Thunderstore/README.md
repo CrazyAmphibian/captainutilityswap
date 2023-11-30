@@ -8,5 +8,6 @@ because the diablo strike is a meme pick, so this is hoping that it'll get me to
 ## how does it work?
 when you hit the swap key, your skill is replaced with the diablo strike or orbital probe (which one you don't have).\
 This mod keeps track of cooldowns and charges of your utilities.\
-Additionally, cooldowns will not tick while the skill is inactive, meaning you must be swapped to it to use it more. (both is simple code-wise, but also keeps a bit more balance).
-Both are affected by stack-increasing equipment.
+Additionally, cooldowns will not tick while the skill is inactive, meaning you must be swapped to it to use it more. (both is simple code-wise, but also keeps a bit more balance).\
+Both are affected by stack-increasing equipment.\
+Both skills are recharged at the start of each stage.

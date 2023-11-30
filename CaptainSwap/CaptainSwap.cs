@@ -62,18 +62,17 @@ namespace CaptainSwap
 			On.RoR2.PlayerCharacterMasterController.SetBody += PCMC_stetbodyhook;	
 			On.RoR2.UI.SkillIcon.Update += skilliconhotkeyshow;
 			//On.RoR2.TeleporterInteraction.FinishedState.OnEnter += refreshallcaptainutilities;
-			On.RoR2.Run.EndStage += refreshallcaptainutilities;
+			On.RoR2.Run.BeginStage += refreshallcaptainutilities;
 		}
 		
 		internal void skilliconhotkeyshow(On.RoR2.UI.SkillIcon.orig_Update orig, RoR2.UI.SkillIcon self)
         {	
 			if (self.targetSkill && self.targetSkillSlot == SkillSlot.Utility && self.targetSkill.characterBody.baseNameToken == "CAPTAIN_BODY_NAME")
             {
-				self.stockText.SetText("");
 				orig.Invoke(self);
 				self.stockText.gameObject.SetActive(true);
 				self.stockText.fontSize = 12f;		
-				self.stockText.SetText( "["+((UnityEngine.KeyCode)captainutilityswapkeycode).ToString() +"]\n"+  (self.stockText.text=="0"?" ": self.stockText.text) , true);
+				self.stockText.SetText( "["+((UnityEngine.KeyCode)captainutilityswapkeycode).ToString() +"]\n"+ self.targetSkill.stock.ToString(), true);
 			}
             else
 			{ 
@@ -124,43 +123,44 @@ namespace CaptainSwap
 			GenericSkill skill = charbod.skillLocator.GetSkill(SkillSlot.Utility);
 			RoR2.Skills.SkillFamily.Variant[] skillvariants = charbod.skillLocator.utility._skillFamily.variants;
 
-			if (skill.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME")
+			if (skill.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME") //if we're using the diablo strike
 			{
 				diablorecharge = skill.rechargeStopwatch;
 				diablostocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[0].skillDef);
 				charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = proberecharge;
 				for (int i = 1; i <= probestocks; i++)
 				{
 					charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
 				}
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = proberecharge;
 
 				return 0;
 			}
-			if (skill.skillNameToken == "CAPTAIN_UTILITY_NAME")
+			if (skill.skillNameToken == "CAPTAIN_UTILITY_NAME") //if we're using the orbital probe
 			{
 				proberecharge = skill.rechargeStopwatch;
 				probestocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[1].skillDef);
 				charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = diablorecharge;
 				for (int i = 1; i <= diablostocks; i++)
 				{
 					charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
 				}
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = diablorecharge;
 				return 1;
 			}
 			return -1;
 		}
 
 
-		public void refreshallcaptainutilities(On.RoR2.Run.orig_EndStage orig, RoR2.Run self)
+		public void refreshallcaptainutilities(On.RoR2.Run.orig_BeginStage orig, RoR2.Run self)
         {
 			orig.Invoke(self);
 			CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
 			if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
             {
+				Log.Debug("Refilling for end of scene...");
 				charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset(); //run twice so we refresh each.
 				swapcaptainutilityskills(charbod);
 				charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset();
