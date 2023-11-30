@@ -1,6 +1,6 @@
 ﻿using BepInEx.Logging;
 
-namespace StageProgression
+namespace CaptainSwap
 {
     internal static class Log
     {
