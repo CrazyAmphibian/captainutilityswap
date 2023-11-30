@@ -61,7 +61,8 @@ namespace CaptainSwap
 
 			On.RoR2.PlayerCharacterMasterController.SetBody += PCMC_stetbodyhook;	
 			On.RoR2.UI.SkillIcon.Update += skilliconhotkeyshow;
-
+			//On.RoR2.TeleporterInteraction.FinishedState.OnEnter += refreshallcaptainutilities;
+			On.RoR2.Run.EndStage += refreshallcaptainutilities;
 		}
 		
 		internal void skilliconhotkeyshow(On.RoR2.UI.SkillIcon.orig_Update orig, RoR2.UI.SkillIcon self)
@@ -153,6 +154,21 @@ namespace CaptainSwap
 			return -1;
 		}
 
+
+		public void refreshallcaptainutilities(On.RoR2.Run.orig_EndStage orig, RoR2.Run self)
+        {
+			orig.Invoke(self);
+			CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
+			if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
+            {
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset(); //run twice so we refresh each.
+				swapcaptainutilityskills(charbod);
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset();
+				swapcaptainutilityskills(charbod);
+
+			}
+
+		}
 
 	}
 }
