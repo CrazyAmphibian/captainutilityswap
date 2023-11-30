@@ -61,6 +61,7 @@ namespace CaptainSwap
 
 			On.RoR2.PlayerCharacterMasterController.SetBody += PCMC_stetbodyhook;	
 			On.RoR2.UI.SkillIcon.Update += skilliconhotkeyshow;
+
 		}
 		
 		internal void skilliconhotkeyshow(On.RoR2.UI.SkillIcon.orig_Update orig, RoR2.UI.SkillIcon self)
@@ -98,64 +99,58 @@ namespace CaptainSwap
 			if (playerbody)
 			{
 
-				//Log.Debug("horray, we have an body!" + playerbody.ToString() );
 				CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
 				if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
 				{
-
 					pressedthisframe= UnityEngine.Input.GetKey((UnityEngine.KeyCode)captainutilityswapkeycode);
-					//Log.Debug(pressedthisframe.ToString());
 
 					if (pressedthisframe && (!pressedlastframe))
 					{
-						//Log.Debug("WTF "+ pressedlastframe.ToString());
-
-
-
-						GenericSkill skill = charbod.skillLocator.GetSkill(SkillSlot.Utility);
-						RoR2.Skills.SkillFamily.Variant[] skillvariants = charbod.skillLocator.utility._skillFamily.variants;
-
-
-						if (skill.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME")
-						{
-							//Log.Debug("$$$$$$ " + "swapping to probes");
-							diablorecharge = skill.rechargeStopwatch;
-							diablostocks = skill.stock;
-							charbod.skillLocator.utility.AssignSkill(skillvariants[0].skillDef);
-							charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
-							charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = proberecharge;
-							for (int i = 1; i <= probestocks; i++)
-							{
-								charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
-								//Log.Debug("$$$$$$ " + "added a probe");
-							}
-
-							goto swapped;
-						}
-						if (skill.skillNameToken == "CAPTAIN_UTILITY_NAME")
-						{
-							//Log.Debug("$$$$$$ " + "swapping to diablo");
-							proberecharge = skill.rechargeStopwatch;
-							probestocks = skill.stock;
-							charbod.skillLocator.utility.AssignSkill(skillvariants[1].skillDef);
-							charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
-							charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = diablorecharge;
-							for (int i = 1; i <= diablostocks; i++)
-							{
-								charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
-								//Log.Debug("$$$$$$ " + "added a diablo");
-							}
-
-							goto swapped;
-						}
+						swapcaptainutilityskills(charbod);
 					}
 
-					swapped:
 					pressedlastframe = pressedthisframe;
 
 
 				}
 			}
+		}
+
+
+
+		public int swapcaptainutilityskills(CharacterBody charbod)
+        {
+			GenericSkill skill = charbod.skillLocator.GetSkill(SkillSlot.Utility);
+			RoR2.Skills.SkillFamily.Variant[] skillvariants = charbod.skillLocator.utility._skillFamily.variants;
+
+			if (skill.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME")
+			{
+				diablorecharge = skill.rechargeStopwatch;
+				diablostocks = skill.stock;
+				charbod.skillLocator.utility.AssignSkill(skillvariants[0].skillDef);
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = proberecharge;
+				for (int i = 1; i <= probestocks; i++)
+				{
+					charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
+				}
+
+				return 0;
+			}
+			if (skill.skillNameToken == "CAPTAIN_UTILITY_NAME")
+			{
+				proberecharge = skill.rechargeStopwatch;
+				probestocks = skill.stock;
+				charbod.skillLocator.utility.AssignSkill(skillvariants[1].skillDef);
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
+				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = diablorecharge;
+				for (int i = 1; i <= diablostocks; i++)
+				{
+					charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
+				}
+				return 1;
+			}
+			return -1;
 		}
 
 
