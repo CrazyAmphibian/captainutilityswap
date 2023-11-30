@@ -119,7 +119,7 @@ namespace CaptainSwap
 
 		public int swapcaptainutilityskills(CharacterBody charbod)
         {
-			GenericSkill skill = charbod.skillLocator.GetSkill(SkillSlot.Utility);
+			GenericSkill skill = charbod.skillLocator.utility;
 			RoR2.Skills.SkillFamily.Variant[] skillvariants = charbod.skillLocator.utility._skillFamily.variants;
 
 			if (skill.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME") //if we're using the diablo strike
@@ -127,12 +127,12 @@ namespace CaptainSwap
 				diablorecharge = skill.rechargeStopwatch;
 				diablostocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[0].skillDef);
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
+				charbod.skillLocator.utility.RemoveAllStocks();
 				for (int i = 1; i <= probestocks; i++)
 				{
-					charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
+					charbod.skillLocator.utility.AddOneStock();
 				}
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = proberecharge;
+				charbod.skillLocator.utility.rechargeStopwatch = proberecharge;
 
 				return 0;
 			}
@@ -141,12 +141,12 @@ namespace CaptainSwap
 				proberecharge = skill.rechargeStopwatch;
 				probestocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[1].skillDef);
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).RemoveAllStocks();
+				charbod.skillLocator.utility.RemoveAllStocks();
 				for (int i = 1; i <= diablostocks; i++)
 				{
-					charbod.skillLocator.GetSkill(SkillSlot.Utility).AddOneStock();
+					charbod.skillLocator.utility.AddOneStock();
 				}
-				charbod.skillLocator.GetSkill(SkillSlot.Utility).rechargeStopwatch = diablorecharge;
+				charbod.skillLocator.utility.rechargeStopwatch = diablorecharge;
 				return 1;
 			}
 			return -1;
@@ -161,11 +161,11 @@ namespace CaptainSwap
 				if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
 				{
 					Log.Debug("Refilling for end of scene...");
-					charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset(); //run twice so we refresh each.
+					charbod.skillLocator.utility?.Reset(); //run twice so we refresh each.
 					swapcaptainutilityskills(charbod);
-					charbod.skillLocator.GetSkill(SkillSlot.Utility).Reset();
+					charbod.skillLocator.utility?.Reset();
 					swapcaptainutilityskills(charbod);
-
+					
 				}
 			}
 
