@@ -6,14 +6,8 @@ using UnityEngine;
 using System;
 using On.EntityStates;
 using EntityStates;
-using Rewired;
-
-
 using BepInEx.Configuration;
-using EntityStates.Captain.Weapon;
-using On.EntityStates.Captain.Weapon;
 using On.RoR2.UI;
-//using R2API;
 using RoR2.UI;
 
 
@@ -43,7 +37,6 @@ namespace CaptainSwap
 			protected ConfigFile Config { get; }
 			public static ConfigEntry<int> captainutilityswapkeycode { get; set; }
 
-			
 
 		}
 
@@ -61,7 +54,6 @@ namespace CaptainSwap
 
 			On.RoR2.PlayerCharacterMasterController.SetBody += PCMC_stetbodyhook;	
 			On.RoR2.UI.SkillIcon.Update += skilliconhotkeyshow;
-			//On.RoR2.TeleporterInteraction.FinishedState.OnEnter += refreshallcaptainutilities;
 			On.RoR2.Run.BeginStage += refreshallcaptainutilities;
 		}
 		
@@ -83,7 +75,15 @@ namespace CaptainSwap
 		internal void PCMC_stetbodyhook(On.RoR2.PlayerCharacterMasterController.orig_SetBody orig, PlayerCharacterMasterController self, GameObject newbody)
 		{
 			orig(self, newbody);
-			playerbody = newbody;
+			if (newbody)
+			{
+				CharacterBody chbd = newbody.GetComponent<CharacterBody>();
+				if (chbd && chbd.baseNameToken == "CAPTAIN_BODY_NAME" && chbd.localPlayerAuthority)
+				{
+					//Log.Info("### A character body was created. " + chbd.name + " " + chbd.isLocalPlayer.ToString() + " " + chbd.playerControllerId.ToString() + " " + chbd.networkIdentity.isClient.ToString() + " " + chbd.localPlayerAuthority.ToString() + " " + chbd.netId.ToString());
+					playerbody = newbody;
+				}
+			}
 		}
 
 		int probestocks = 1;
@@ -120,9 +120,9 @@ namespace CaptainSwap
 		public int swapcaptainutilityskills(CharacterBody charbod)
         {
 			GenericSkill skill = charbod.skillLocator.utility;
-			RoR2.Skills.SkillFamily.Variant[] skillvariants = charbod.skillLocator.utility._skillFamily.variants;
+			RoR2.Skills.SkillFamily.Variant[] skillvariants = charbod.skillLocator.utility?._skillFamily.variants;
 
-			if (skill.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME") //if we're using the diablo strike
+			if (skill?.skillNameToken == "CAPTAIN_UTILITY_ALT1_NAME") //if we're using the diablo strike
 			{
 				diablorecharge = skill.rechargeStopwatch;
 				diablostocks = skill.stock;
@@ -136,7 +136,7 @@ namespace CaptainSwap
 
 				return 0;
 			}
-			if (skill.skillNameToken == "CAPTAIN_UTILITY_NAME") //if we're using the orbital probe
+			if (skill?.skillNameToken == "CAPTAIN_UTILITY_NAME") //if we're using the orbital probe
 			{
 				proberecharge = skill.rechargeStopwatch;
 				probestocks = skill.stock;
