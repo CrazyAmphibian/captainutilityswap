@@ -27,7 +27,7 @@ namespace CaptainSwap
 		public const string PluginGUID = PluginAuthor + "." + PluginName;
 		public const string PluginAuthor = "CrazyAmphibian";
 		public const string PluginName = "CaptainSwap";
-		public const string PluginVersion = "1.1.0";
+		public const string PluginVersion = "1.2.0";
 		//PlayerCharacterMasterController playerCharacterMasterController;
 		GameObject playerbody;
 
