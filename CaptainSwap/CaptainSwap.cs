@@ -27,7 +27,7 @@ namespace CaptainSwap
 		public const string PluginGUID = PluginAuthor + "." + PluginName;
 		public const string PluginAuthor = "CrazyAmphibian";
 		public const string PluginName = "CaptainSwap";
-		public const string PluginVersion = "1.2.0";
+		public const string PluginVersion = "1.3.0";
 		//PlayerCharacterMasterController playerCharacterMasterController;
 		GameObject playerbody;
 
@@ -93,6 +93,7 @@ namespace CaptainSwap
 		public int captainutilityswapkeycode = (int)KeyCode.T;
 		bool pressedlastframe = false;
 		bool pressedthisframe = false;
+		int totalmaxstocks = 1;
 		public void FixedUpdate()
 		{
 			if (playerbody)
@@ -101,7 +102,13 @@ namespace CaptainSwap
 				CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
 				if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
 				{
-					pressedthisframe= UnityEngine.Input.GetKey((UnityEngine.KeyCode)captainutilityswapkeycode);
+					
+					if (charbod.skillLocator.utility)
+                    {
+						totalmaxstocks = charbod.skillLocator.utility.maxStock;
+					}
+
+					pressedthisframe = UnityEngine.Input.GetKey((UnityEngine.KeyCode)captainutilityswapkeycode);
 
 					if (pressedthisframe && (!pressedlastframe))
 					{
@@ -127,11 +134,14 @@ namespace CaptainSwap
 				diablorecharge = skill.rechargeStopwatch;
 				diablostocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[0].skillDef);
+				/*
 				charbod.skillLocator.utility.RemoveAllStocks();
 				for (int i = 1; i <= probestocks; i++)
 				{
 					charbod.skillLocator.utility.AddOneStock();
 				}
+				*/
+				charbod.skillLocator.utility.stock = probestocks;
 				charbod.skillLocator.utility.rechargeStopwatch = proberecharge;
 
 				return 0;
@@ -141,11 +151,14 @@ namespace CaptainSwap
 				proberecharge = skill.rechargeStopwatch;
 				probestocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[1].skillDef);
+				/*
 				charbod.skillLocator.utility.RemoveAllStocks();
 				for (int i = 1; i <= diablostocks; i++)
 				{
 					charbod.skillLocator.utility.AddOneStock();
 				}
+				*/
+				charbod.skillLocator.utility.stock = diablostocks;
 				charbod.skillLocator.utility.rechargeStopwatch = diablorecharge;
 				return 1;
 			}
@@ -156,18 +169,33 @@ namespace CaptainSwap
 		public void refreshallcaptainutilities(On.RoR2.Run.orig_BeginStage orig, RoR2.Run self)
         {
 			orig(self);
+
+			Log.Debug("Refilling for end of scene...");
+			probestocks = totalmaxstocks;
+			diablostocks = totalmaxstocks;
+			proberecharge = 0f;
+			diablorecharge = 0f;
+
+
+			/*
 			if (playerbody){
 				CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
 				if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
 				{
 					Log.Debug("Refilling for end of scene...");
+
+					/
 					charbod.skillLocator.utility?.Reset(); //run twice so we refresh each.
 					swapcaptainutilityskills(charbod);
 					charbod.skillLocator.utility?.Reset();
 					swapcaptainutilityskills(charbod);
+					/
+
 					
 				}
 			}
+			*/
+
 
 		}
 
