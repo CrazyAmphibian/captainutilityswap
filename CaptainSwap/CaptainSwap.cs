@@ -80,7 +80,6 @@ namespace CaptainSwap
 				CharacterBody chbd = newbody.GetComponent<CharacterBody>();
 				if (chbd && chbd.baseNameToken == "CAPTAIN_BODY_NAME" && chbd.localPlayerAuthority)
 				{
-					//Log.Info("### A character body was created. " + chbd.name + " " + chbd.isLocalPlayer.ToString() + " " + chbd.playerControllerId.ToString() + " " + chbd.networkIdentity.isClient.ToString() + " " + chbd.localPlayerAuthority.ToString() + " " + chbd.netId.ToString());
 					playerbody = newbody;
 				}
 			}
@@ -134,13 +133,7 @@ namespace CaptainSwap
 				diablorecharge = skill.rechargeStopwatch;
 				diablostocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[0].skillDef);
-				/*
-				charbod.skillLocator.utility.RemoveAllStocks();
-				for (int i = 1; i <= probestocks; i++)
-				{
-					charbod.skillLocator.utility.AddOneStock();
-				}
-				*/
+
 				charbod.skillLocator.utility.stock = probestocks;
 				charbod.skillLocator.utility.rechargeStopwatch = proberecharge;
 
@@ -151,13 +144,7 @@ namespace CaptainSwap
 				proberecharge = skill.rechargeStopwatch;
 				probestocks = skill.stock;
 				charbod.skillLocator.utility.AssignSkill(skillvariants[1].skillDef);
-				/*
-				charbod.skillLocator.utility.RemoveAllStocks();
-				for (int i = 1; i <= diablostocks; i++)
-				{
-					charbod.skillLocator.utility.AddOneStock();
-				}
-				*/
+
 				charbod.skillLocator.utility.stock = diablostocks;
 				charbod.skillLocator.utility.rechargeStopwatch = diablorecharge;
 				return 1;
@@ -175,27 +162,6 @@ namespace CaptainSwap
 			diablostocks = totalmaxstocks;
 			proberecharge = 0f;
 			diablorecharge = 0f;
-
-
-			/*
-			if (playerbody){
-				CharacterBody charbod = playerbody.GetComponent<CharacterBody>();
-				if (charbod && charbod.baseNameToken == "CAPTAIN_BODY_NAME")
-				{
-					Log.Debug("Refilling for end of scene...");
-
-					/
-					charbod.skillLocator.utility?.Reset(); //run twice so we refresh each.
-					swapcaptainutilityskills(charbod);
-					charbod.skillLocator.utility?.Reset();
-					swapcaptainutilityskills(charbod);
-					/
-
-					
-				}
-			}
-			*/
-
 
 		}
 
