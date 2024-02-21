@@ -1,3 +1,6 @@
+## 1.4.0
+- added option to disable the UI additions. Helps reduce clutter and improve mod compatibility.
+
 ## 1.3.0
 - fixed stocks not being reset when a stage restarts
 - improved swapping code

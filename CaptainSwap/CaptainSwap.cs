@@ -27,7 +27,7 @@ namespace CaptainSwap
 		public const string PluginGUID = PluginAuthor + "." + PluginName;
 		public const string PluginAuthor = "CrazyAmphibian";
 		public const string PluginName = "CaptainSwap";
-		public const string PluginVersion = "1.3.0";
+		public const string PluginVersion = "1.4.0";
 		//PlayerCharacterMasterController playerCharacterMasterController;
 		GameObject playerbody;
 
@@ -52,6 +52,12 @@ namespace CaptainSwap
 				(int)KeyCode.T,
 				"which keypress will swap utilities.\nTakes the form of a unity keycode.").Value;
 
+			showcaptainutilswapui = Config.BInd<bool>(
+				"UI",
+				"show hotkey UI",
+				true,
+				"whether or not to show the hotkey above the skill icon with stocks.\nSuggested to disable this if you're using another mod which changes the skill stock text.").Value;
+
 			On.RoR2.PlayerCharacterMasterController.SetBody += PCMC_stetbodyhook;	
 			On.RoR2.UI.SkillIcon.Update += skilliconhotkeyshow;
 			On.RoR2.Run.BeginStage += refreshallcaptainutilities;
@@ -60,7 +66,7 @@ namespace CaptainSwap
 		internal void skilliconhotkeyshow(On.RoR2.UI.SkillIcon.orig_Update orig, RoR2.UI.SkillIcon self)
         {
 			orig(self);
-			if (self.targetSkill && self.targetSkillSlot == SkillSlot.Utility && self.targetSkill.characterBody.baseNameToken == "CAPTAIN_BODY_NAME")
+			if (showcaptainutilswapui && self.targetSkill && self.targetSkillSlot == SkillSlot.Utility && self.targetSkill.characterBody.baseNameToken == "CAPTAIN_BODY_NAME")
             {
 				self.stockText.gameObject.SetActive(true);
 				self.stockText.fontSize = 12f;		
@@ -90,6 +96,7 @@ namespace CaptainSwap
 		float proberecharge = 0f;
 		float diablorecharge = 0f;
 		public int captainutilityswapkeycode = (int)KeyCode.T;
+		public bool showcaptainutilswapui = true;
 		bool pressedlastframe = false;
 		bool pressedthisframe = false;
 		int totalmaxstocks = 1;
